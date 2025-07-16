@@ -163,6 +163,15 @@ To support manual validation, we developed a custom GUI tool to assist future re
 
 ## Term of Use Check
 
+To address concerns related to anti-scraping compliance, PDF copies of the following websites have been archived and are available at the [Geocoding Documentation Repository](https://github.com/WilliamClintC/Geocoding_Documentation/tree/main/documents):
+
+- Truck Stops and Services  
+- RV and Travelers Directory  
+- Yellow Pages  
+- iExit
+
+Yellow Pages includes clauses that may limit scraping or data extraction. Google and Yelp are of limited concern, given that we were approved API access. Truck Stops and Services, RV and Travelers Directory and iExit do not impose or mention any restrictions on scraping.
+
 ## Next Steps
 
 1.   Finalize code cleaning for future reproducibility. **Given the volume of code involved, this task is expected to require a significant amount of time.**
@@ -174,7 +183,6 @@ To support manual validation, we developed a custom GUI tool to assist future re
 
      > **Quoted from Yellow Pages Terms of Use:**
      >
-     > "2. Using the YP Sites/Services
      > 2.1 Grant of Rights/Restrictions on Use of Data. Subject to your compliance with the terms and conditions of this TOU, we grant you a limited, non-exclusive right to use the YP Sites/Services, and any content and materials made available to you in connection with your use of the YP Sites/Services, only for your individual, non-commercial, informational purposes and for such other purposes (and subject to such further limitations) as may be provided in this TOU (including any additional terms applicable to a particular Service) or any instructions for use that we may provide from time to time (such as API Terms, where available).
      >
      > **Data Mining/Scraping and Framing Prohibited.** You may not use bots, scrapers, crawlers, spiders, or any similar methods, processes, or tools to "data mine" or otherwise gather or extract data from the YP Sites, and you may not frame or proxy the YP Sites or utilize any other techniques to re-display the YP Sites (or any content on the YP Sites) without Thryv, Inc.’s prior express consent, which consent, if given, may be withdrawn by us at any time, with or without notice, in our sole discretion."
