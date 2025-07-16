@@ -1,5 +1,5 @@
 ---
-title: "Geocoding Truck Stops Report"
+title: "Geocoding Truck Stops Documentation"
 author: "William Co"
 date: today
 format:
@@ -12,13 +12,14 @@ format:
     number-sections: true
     theme: cosmo
 abstract: |
-  This is the abstract of the academic report. Summarize the main points and findings here.
+  This report documents the geocoding of U.S. truck stop data, addressing challenges from inconsistent address formats. Using phone number matching and structured data from Truck Stops and Services, Yelp, Yellow Pages, and iExit, we achieved a 99.19% match rate. A custom interface was developed to support manual verification and ensure data accuracy. 
+
 keywords: [sample, academic, report, quarto]
 ---
 
 # Introduction
 
-This document is prepared for Prof. Ron Yang, who will be returning to meet with us. It outlines the current progress of the geocoding task.
+This document is prepared for Prof. Ron Yang, who will be returning to meet at July 16 2025, 11:00 AM PST. It outlines the current progress of the geocoding task and is intended to provide context for discussion and feedback.
 
 # Setup
 
@@ -28,7 +29,7 @@ The main challenge arises from the inconsistent formatting of addresses. Some en
 
 The dataset also required extensive data cleaning to be useful.
 
-# Approach
+# Approaches
 
 ## Google (Initial) Approach
 
@@ -45,7 +46,7 @@ The first approach involved directly submitting address strings to the Google Ma
 -   Cleaning and standardizing address strings before submission.
 -   Exploring and comparing the Google Geocoding and Places APIs.
 
-Although the Google API offers convenience, it lacks reliability in the context of our dataset.
+Although the Google API offers convenience, it lacks reliability in the context of our dataset. In the interest of time no further detail about this project will be mentioned. 
 
 ## Truck Stops and Services Website (Second) Approach
 
@@ -63,7 +64,7 @@ This would be an example of the webpage:
 :::
 
 ::: {.figure}
-![Example of the Truck Stops and Services website interface](images/Screenshot%202025-07-16%20002154.png){fig-alt="Webpage Example 2" width="80%"}
+![Example of the RV and Travelers website interface](images/Screenshot%202025-07-16%20002154.png){fig-alt="Webpage Example 2" width="80%"}
 
 Another example of the Truck Stops and Services website interface.
 :::
@@ -74,13 +75,7 @@ The complete data available from this scraping is available in [Appendix: Truck 
 Both websites maintain structured records that include phone numbers, making them effective for cross-referencing. Using these sources, we employed two main matching strategies:
 
 1.  **Phone Number Matching**: Directly matching entries based on phone numbers.
-2.  **Place Name to ZIP Code Matching**: This strategy involves a hierarchical matching process. First, the state or ZIP code must match. Next, the city or highway exit must align. After that, the road name must match. Finally, the business or place name must match.
-
-### Results
-
--   Phone number matching alone successfully resolved 1,795 out of 2,333 entries (76.94%), 538 missing entries.
--   Matching based on ZIP code and place name resolved 1,900 out of 2,333 entries (81.44%), 433 missing entries.
--   By combining both methods, we were able to resolve 2,090 out of 2,333 entries (89.58%), 243 missing entries.
+2.  **Place Name to ZIP Code Matching**: This strategy involves a hierarchical matching process. First, the state or ZIP code must match. Next, the city or highway exit must match. After that, the road name must match. Finally, the business or place name must match.
 
 This approach improved match rates compared to the first method and provided a more verifiable matching process.
 
@@ -97,17 +92,11 @@ An example of the Yelp website interface is shown below:
 ![Another example of the Yelp website interface](images/Screenshot%202025-07-16%20013953.png){fig-alt="Yelp Example 2" width="80%"}
 :::
 
-The full list of data fields extracted from Yelp is available in the [Appendix: Yelp Data Dictionary](#yelp-data-dictionary). Most notably, we observe, place name, latitude, longitude and weather a place is still active. 
-
-### Results
-
--   Matches before Yelp (Second Approach): 2,090 out of 2,333 entries (89.58%), 243 entries missing
--   Matches after Yelp integration (Second and Third Approach): 2,189 out of 2,333 entries (93.83%), 144 entries missing
+The full list of data fields extracted from Yelp is available in the [Appendix: Yelp Data Dictionary](#yelp-data-dictionary). Most notably, we observe, place name, latitude, longitude and **weather a place is still active**. Active/inactive designation is a uncommon and useful field of this dataset. 
 
 ## Yellow Pages (Fourth) Approach
 
 We further improved our match rate using [YellowPages](https://www.yellowpages.com/), which also allows direct phone number queries through web scraping. Examples of the website interface are shown below:
-
 
 ::: {.figure}
 ![Example of the YellowPages website interface](images/Screenshot%202025-07-16%20011959.png){fig-alt="YellowPages Example 1" width="80%"}
@@ -119,18 +108,15 @@ We further improved our match rate using [YellowPages](https://www.yellowpages.c
 
  The full list of data fields extracted from Yellow Pages is available in the [Appendix: Yellow Pages Data Dictionary](#yellow-pages-data-dictionary). Most notably, we observe, place name, latitude, longitude and phone.
 
-### Results
-
--   Matches after Yelp integration (Second and Third Approach): 2,189 out of 2,333 entries (93.83%), 144 entries missing
--   Matches after YellowPages integration (Second,Third and Fourth Approach):2,314 out of 2,333 (99.19%), 19 entries missing 
-
-Given the small number of remaining unmatched entries, manual verification is now a feasible next step.
+This approach reduced the unmatched entries to 19, making manual verification a feasible next step.
 
 ## Summary of Approaches 
 
 After implementing considering all(2,3,4) approaches, the consolidated output can be viewed here: [Final Output](https://drive.google.com/file/d/1x_a9vmsUJQSDW2pLBrj42hCCAPojDy3K/view).
 
 The entries that remain unmatched are available here: [Missing Outputs](https://drive.google.com/file/d/1n48xnm5WnvoEiTcpS7VDbwj-uhKQ38Vc/view).
+
+The current codebase is available on GitHub: [WilliamClintC/Geocoding_Task](https://github.com/WilliamClintC/Geocoding_Task/tree/main)
 
 ### Matching Summary Table
 
@@ -145,177 +131,211 @@ The entries that remain unmatched are available here: [Missing Outputs](https://
 
 ## Current Project: iExit Integration
 
-Since the project's goal is to match latitude and longitude data to exit locations, a comprehensive dataset of U.S. highway exits is essential. To my knowledge, iExit is the most complete single source currently available online. Example of the Exit image website is as follows.
+Since the project's goal is to match latitude and longitude data to exit locations, a comprehensive dataset of U.S. highway exits is essential. To my knowledge, iExit is the most complete single source currently available online. **(Your insights on this would be valuable.)** Example of the Exit image website is as follows.
 
 ::: {.figure}
 ![Example of the iExit website interface](images/Screenshot%202025-07-16%20024438.png){fig-alt="iExit Example" width="80%"}
 :::
 
 The full list of data fields is available in the [Appendix: iExit Data Dictionary](#iexit-data-dictionary). Most notably, we observe highway, exit, latitude, longitude and **direction of travel**.
-Direction of travel is to be emphasized as this is a unique piece of information not available elsewhere. 
+Direction of travel is to be emphasized. This is a unique piece of information not available elsewhere. 
 
 ## Utilities Developed
 
-To support manual validation, we developed a custom GUI tool to assist future research assistants. This interface displays two columns—original dataset vs. matched results—side-by-side, allowing quick visual inspection and correction without requiring coding experience. *(Attach GUI screenshot here)*
+To support manual validation, we developed a custom GUI tool to assist future research assistants. This interface displays two columns original dataset vs. matched results side by side, allowing quick visual inspection and correction without requiring coding experience. Image of the program is as follows. 
+
+::: {.figure}
+![Image of the custom GUI tool for manual validation](images/Screenshot%202025-07-16%20035613.png){fig-alt="Custom GUI tool for validation" width="80%"}
+:::
+
+### Features
+-   View by Successful/Failed/Multiple Matches
+-   View basic match statistics
+-   View specific row entry
+-   View website(truckstopsandservices/Yellowpages/Yelp) link
+-   Generate google/bing/duckduckgo search link
+-   Input Verification Reason
+-   Row randomized viewing
+-   Match highlighting 
+    -   Red (Mismatch)
+    -   Yellow (Partial Match)
+    -   Green (Match)
+
+## Term of Use Check
 
 ## Next Steps
 
--   Finalize code cleaning for future reproducibility.
--   Conduct manual verification of the remaining 19 unmatched entries.
+1.   Finalize code cleaning for future reproducibility. **Given the volume of code involved, this task is expected to require a significant amount of time.**
+2.   Conduct manual verification of the remaining 19 unmatched entries.
+3.   Conduct robustness checks on the finalized data.
+4.   Discuss Yellow Pages Terms of Use and Data Policy
+
+     ![Screenshot of Yellow Pages Terms of Use](images/Screenshot%202025-07-16%20063400.png){fig-alt="Yellow Pages Terms of Use" width="80%"}
+
+     > **Quoted from Yellow Pages Terms of Use:**
+     >
+     > "2. Using the YP Sites/Services
+     > 2.1 Grant of Rights/Restrictions on Use of Data. Subject to your compliance with the terms and conditions of this TOU, we grant you a limited, non-exclusive right to use the YP Sites/Services, and any content and materials made available to you in connection with your use of the YP Sites/Services, only for your individual, non-commercial, informational purposes and for such other purposes (and subject to such further limitations) as may be provided in this TOU (including any additional terms applicable to a particular Service) or any instructions for use that we may provide from time to time (such as API Terms, where available).
+     >
+     > **Data Mining/Scraping and Framing Prohibited.** You may not use bots, scrapers, crawlers, spiders, or any similar methods, processes, or tools to "data mine" or otherwise gather or extract data from the YP Sites, and you may not frame or proxy the YP Sites or utilize any other techniques to re-display the YP Sites (or any content on the YP Sites) without Thryv, Inc.’s prior express consent, which consent, if given, may be withdrawn by us at any time, with or without notice, in our sole discretion."
+5.   Feedback?
 
 # Appendix
 
-## Truck Stops and Services/ RV and Travelers Data Dictionary 
+## Truck Stops and Services/ RV and Travelers Data Dictionary
+
 
 The following table summarizes the data fields used in the truck stop dataset:
 
 ### General Information
 
-| Column Name       | Description                        |
-|-------------------|------------------------------------|
-| state_id          | State identifier                   |
-| state             | Name of the U.S. state             |
-| name              | Truck stop name                    |
-| href              | Relative URL path                  |
-| full_url          | Full website URL                   |
-| stop_type         | Type of stop (e.g., fuel, full)    |
-| Chain             | Company or chain name              |
+| Column Name | Description |
+|:----------- |:----------- |
+| `state_id` | State identifier |
+| `state` | Name of the U.S. state |
+| `name` | Truck stop name |
+| `href` | Relative URL path |
+| `full_url` | Full website URL |
+| `stop_type` | Type of stop (e.g., fuel, full) |
+| `Chain` | Company or chain name |
 
 ### Location Details
 
-| Column Name       | Description                        |
-|-------------------|------------------------------------|
-| Latitude          | Latitude coordinate                |
-| Longitude         | Longitude coordinate               |
-| Highway           | Associated highway                 |
-| Exit              | Exit number                        |
-| Mile Marker       | Highway mile marker                |
-| Street Address    | Street address                     |
-| City              | City name                          |
-| State             | State abbreviation                 |
-| Postal Code       | ZIP/postal code                    |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Latitude` | Latitude coordinate |
+| `Longitude` | Longitude coordinate |
+| `Highway` | Associated highway |
+| `Exit` | Exit number |
+| `Mile Marker` | Highway mile marker |
+| `Street Address` | Street address |
+| `City` | City name |
+| `State` | State abbreviation |
+| `Postal Code` | ZIP/postal code |
 
 ### Contact Information
 
-| Column Name       | Description                        |
-|-------------------|------------------------------------|
-| Phone             | Main contact number                |
-| Phone 2–5         | Additional phone numbers           |
-| Fax               | Fax number                         |
-| Mailing Address   | Mailing address                    |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Phone` | Main contact number |
+| `Phone 2–5` | Additional phone numbers |
+| `Fax` | Fax number |
+| `Mailing Address` | Mailing address |
 
 ### Amenities & Services
 
-| Column Name               | Description                            |
-|---------------------------|----------------------------------------|
-| Hours of Operation        | Operating hours                        |
-| # of Parking Spots        | Total parking spaces                   |
-| # of Reserved Parking Spots | Number of reserved spaces           |
-| # of Paid Parking Spots   | Paid-only spots                        |
-| # of Fuel Lanes           | Fuel pump lanes for trucks             |
-| # of Showers              | Total shower stalls                    |
-| # of Men's Showers        | Men’s shower stalls                    |
-| # of Truck Service Bays   | Truck repair/service bays              |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Hours of Operation` | Operating hours |
+| `# of Parking Spots` | Total parking spaces |
+| `# of Reserved Parking Spots` | Number of reserved spaces |
+| `# of Paid Parking Spots` | Paid-only spots |
+| `# of Fuel Lanes` | Fuel pump lanes for trucks |
+| `# of Showers` | Total shower stalls |
+| `# of Men's Showers` | Men’s shower stalls |
+| `# of Truck Service Bays` | Truck repair/service bays |
 
 ### Fuel Types & Links
 
-| Column Name  | Description                            |
-|--------------|----------------------------------------|
-| Unleaded     | Unleaded gasoline available (Y/N)      |
-| Diesel       | Diesel fuel available (Y/N)            |
-| Bulk Def     | Diesel exhaust fluid (DEF) availability|
-| Propane      | Propane fuel available (Y/N)           |
-| https        | HTTPS version of site URL              |
-| http / htp   | Alternate/incomplete protocols         |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Unleaded` | Unleaded gasoline available (Y/N) |
+| `Diesel` | Diesel fuel available (Y/N) |
+| `Bulk Def` | Diesel exhaust fluid (DEF) availability |
+| `Propane` | Propane fuel available (Y/N) |
+| `https` | HTTPS version of site URL |
+| `http / htp` | Alternate/incomplete protocols |
 
 ## Yelp Data Dictionary
 
+
 ### General Business Information
 
-| Column Name      | Description                                                |
-|------------------|------------------------------------------------------------|
-| `Original_Phone` | The phone number used as input for the Yelp phone search   |
-| `Name`           | The official name of the business                          |
-| `Rating`         | Yelp rating (e.g., 4.5 stars)                              |
-| `Review_Count`   | Total number of Yelp reviews                               |
-| `Is_Closed`      | Boolean indicating if the business is permanently closed   |
-| `URL`            | Full Yelp business listing URL                             |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Original_Phone` | The phone number used as input for the Yelp phone search |
+| `Name` | The official name of the business |
+| `Rating` | Yelp rating (e.g., 4.5 stars) |
+| `Review_Count` | Total number of Yelp reviews |
+| `Is_Closed` | Boolean indicating if the business is permanently closed |
+| `URL` | Full Yelp business listing URL |
 
 ### Location Details
 
-| Column Name  | Description                             |
-|--------------|-----------------------------------------|
-| `Address`    | Street address of the business           |
-| `City`       | City where the business is located       |
-| `State`      | State (abbreviation)                    |
-| `Zip_Code`   | Postal or ZIP code                      |
-| `Latitude`   | Latitude coordinate                     |
-| `Longitude`  | Longitude coordinate                    |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Address` | Street address of the business |
+| `City` | City where the business is located |
+| `State` | State (abbreviation) |
+| `Zip_Code` | Postal or ZIP code |
+| `Latitude` | Latitude coordinate |
+| `Longitude` | Longitude coordinate |
 
 ### Contact & Business Attributes
 
-| Column Name  | Description                                                |
-|--------------|------------------------------------------------------------|
-| `Phone`      | Official business phone number returned by Yelp            |
-| `Categories` | List of categories (e.g., "Coffee & Tea", "Gas Station")   |
-| `Price`      | Price level indicator (`$`, `$$`, etc., if available)      |
+| Column Name | Description |
+|:----------- |:----------- |
+| `Phone` | Official business phone number returned by Yelp |
+| `Categories` | List of categories (e.g., "Coffee & Tea", "Gas Station") |
+| `Price` | Price level indicator (`$`, `$$`, etc., if available) |
 
 ## Yellow Pages Data Dictionary
 
+
 ### General Business Information
 
-| Column Name      | Description                                                             |
-|------------------|-------------------------------------------------------------------------|
-| `ADDRESS`        | Full address of the business as listed on Yellow Pages                  |
-| `AKA`            | Alternate names or aliases for the business                             |
-| `BUSINESS_NAME`  | The primary name of the business                                        |
-| `BUSINESS_URL`   | URL to the Yellow Pages business listing                                |
-| `CATEGORIES`     | Business categories (e.g., "Restaurants", "Auto Repair")                |
-| `STATUS`         | Business status (e.g., "Open", "Closed")                                |
-| `WEBSITE`        | Official website of the business, if available                          |
+| Column Name | Description |
+|:----------- |:----------- |
+| `ADDRESS` | Full address of the business as listed on Yellow Pages |
+| `AKA` | Alternate names or aliases for the business |
+| `BUSINESS_NAME` | The primary name of the business |
+| `BUSINESS_URL` | URL to the Yellow Pages business listing |
+| `CATEGORIES` | Business categories (e.g., "Restaurants", "Auto Repair") |
+| `STATUS` | Business status (e.g., "Open", "Closed") |
+| `WEBSITE` | Official website of the business, if available |
 
 ### Location Details
 
-| Column Name        | Description                                                          |
-|--------------------|----------------------------------------------------------------------|
-| `JSONLD_CITY_1`    | City extracted from the embedded structured JSON-LD data             |
-| `JSONLD_STATE_1`   | State extracted from the embedded structured JSON-LD data            |
-| `JSONLD_STREET_1`  | Street address from JSON-LD                                           |
-| `JSONLD_ZIP_1`     | ZIP code from JSON-LD                                                |
-| `JSONLD_LAT_1`     | Latitude coordinate from JSON-LD                                     |
-| `JSONLD_LNG_1`     | Longitude coordinate from JSON-LD                                    |
+| Column Name | Description |
+|:----------- |:----------- |
+| `JSONLD_CITY_1` | City extracted from the embedded structured JSON-LD data |
+| `JSONLD_STATE_1` | State extracted from the embedded structured JSON-LD data |
+| `JSONLD_STREET_1` | Street address from JSON-LD |
+| `JSONLD_ZIP_1` | ZIP code from JSON-LD |
+| `JSONLD_LAT_1` | Latitude coordinate from JSON-LD |
+| `JSONLD_LNG_1` | Longitude coordinate from JSON-LD |
 
 ### Contact & Business Attributes
 
-| Column Name        | Description                                                          |
-|--------------------|----------------------------------------------------------------------|
-| `ORIGINAL_PHONE`   | Phone number used to initiate the Yellow Pages lookup                |
-| `FORMATTED_PHONE`  | Formatted business phone number as displayed                         |
-| `JSONLD_PHONE_1`   | Phone number from the structured JSON-LD data                        |
-| `EXTRA_PHONES`     | Any additional phone numbers found                                   |
-| `PHONE`            | Phone number listed in the primary Yellow Pages HTML content         |
-| `JSONLD_NAME_1`    | Business name from structured JSON-LD data                           |
+| Column Name | Description |
+|:----------- |:----------- |
+| `ORIGINAL_PHONE` | Phone number used to initiate the Yellow Pages lookup |
+| `FORMATTED_PHONE` | Formatted business phone number as displayed |
+| `JSONLD_PHONE_1` | Phone number from the structured JSON-LD data |
+| `EXTRA_PHONES` | Any additional phone numbers found |
+| `PHONE` | Phone number listed in the primary Yellow Pages HTML content |
+| `JSONLD_NAME_1` | Business name from structured JSON-LD data |
 
 ### Metadata
 
-| Column Name    | Description                                                             |
-|----------------|-------------------------------------------------------------------------|
-| `SCRAPED_AT`   | Timestamp of when the data was scraped                                  |
-| `SEARCH_URL`   | URL used to perform the Yellow Pages phone-based search                 |
+| Column Name | Description |
+|:----------- |:----------- |
+| `SCRAPED_AT` | Timestamp of when the data was scraped |
+| `SEARCH_URL` | URL used to perform the Yellow Pages phone-based search |
 
 ## iExit Data Dictionary
 
-| Column Name         | Description                                                                 |
-|---------------------|-----------------------------------------------------------------------------|
-| `state`             | U.S. state abbreviation (e.g., TX, CA) where the highway exit is located    |
-| `highway`           | Name or number of the highway (e.g., I-10, US-101)                          |
-| `exit_id`           | Unique identifier for the highway exit as used in iExit                     |
-| `title`             | Display title or name of the exit                                           |
-| `exit_name`         | Name of the exit (may include road or location name)                        |
-| `exit_description`  | Additional descriptive text about the exit or nearby services               |
-| `exit_location`     | Textual representation of the exit’s location                               |
-| `iexit_detail_link` | URL link to the iExit detailed page for the exit                            |
-| `latitude`          | Latitude coordinate of the exit                                             |
-| `longitude`         | Longitude coordinate of the exit                                            |
-| `google_maps_link`  | Direct link to the exit location on Google Maps                             |
-| `direction`         | Direction of travel (e.g., Northbound, Eastbound)                           |
+| Column Name | Description |
+|:----------- |:----------- |
+| `state` | U.S. state abbreviation (e.g., TX, CA) where the highway exit is located |
+| `highway` | Name or number of the highway (e.g., I-10, US-101) |
+| `exit_id` | Unique identifier for the highway exit as used in iExit |
+| `title` | Display title or name of the exit |
+| `exit_name` | Name of the exit (may include road or location name) |
+| `exit_description` | Additional descriptive text about the exit or nearby services |
+| `exit_location` | Textual representation of the exit’s location |
+| `iexit_detail_link` | URL link to the iExit detailed page for the exit |
+| `latitude` | Latitude coordinate of the exit |
+| `longitude` | Longitude coordinate of the exit |
+| `google_maps_link` | Direct link to the exit location on Google Maps |
+| `direction` | Direction of travel (e.g., Northbound, Eastbound) |
