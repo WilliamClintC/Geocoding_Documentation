@@ -77,7 +77,7 @@ What is also to note is that some Trucker's friend entries only appear in the RV
 Both websites maintain structured records that include phone numbers, making them effective for cross-referencing. Using these sources, we employed two main matching strategies:
 
 1.  **Phone Number Matching**: Directly matching entries based on phone numbers.
-2.  **Place Name to ZIP Code Matching**: This strategy involves a hierarchical matching process. First, the state or ZIP code must match. Next, the city or highway exit must match. After that, the road name must match. Finally, the business or place name must match.
+2.  **Place Name to ZIP Code Matching**: This strategy involves a hierarchical matching process. First, the state or ZIP code must match. Next, the city or highway exit must match. After that, the road name must match. Finally, the business or place name must match. Additionally, I also checked if the chain (i.e. Chevron, Shell, etc.) of the truck stop matches.
 
 This approach improved match rates compared to the first method and provided a more verifiable matching process.
 
@@ -191,6 +191,7 @@ Yellow Pages includes clauses that may limit scraping or data extraction. Google
      >
      > **Data Mining/Scraping and Framing Prohibited.** You may not use bots, scrapers, crawlers, spiders, or any similar methods, processes, or tools to "data mine" or otherwise gather or extract data from the YP Sites, and you may not frame or proxy the YP Sites or utilize any other techniques to re-display the YP Sites (or any content on the YP Sites) without Thryv, Inc.’s prior express consent, which consent, if given, may be withdrawn by us at any time, with or without notice, in our sole discretion."
 5.   Feedback?
+6.   Consider using the years to match as well
 
 # Appendix
 
