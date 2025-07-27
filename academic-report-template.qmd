@@ -72,6 +72,8 @@ Another example of the Truck Stops and Services website interface.
 
 The complete data available from this scraping is available in [Appendix: Truck Stops and Services/ RV and Travelers Data Dictionary](#truck-stops-and-services-rv-and-travelers-data-dictionary). Most notably, we observe directly the latitude and longitude, directly along with phone and the name of the stop.
 
+What is also to note is that some Trucker's friend entries only appear in the RV and Travelers Directory and not in Truck Stops and Services. 
+
 Both websites maintain structured records that include phone numbers, making them effective for cross-referencing. Using these sources, we employed two main matching strategies:
 
 1.  **Phone Number Matching**: Directly matching entries based on phone numbers.
@@ -119,6 +121,8 @@ The entries that remain unmatched are available here: [Missing Outputs](https://
 The current codebase is available on GitHub: [WilliamClintC/Geocoding_Task](https://github.com/WilliamClintC/Geocoding_Task/tree/main)
 
 ### Matching Summary Table
+
+This data is for the 4 states, all years present aside from 2017. 
 
 | Matching Method                                                 | Matches       | Total Entries | Match Rate | Missing Entries |
 |------------------------------------------------------------------|---------------|----------------|-------------|------------------|
