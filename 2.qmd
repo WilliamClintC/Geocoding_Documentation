@@ -18,15 +18,15 @@ abstract: |
 keywords: [geocoding, data cleaning, location accuracy, Yelp, Yellow Pages, truck stops]
 ---
 
-
 # Introduction
 
 During the process of geocoding truck stops, we observed a significant number of false positives. Although Yelp and Yellow Pages entries were matched by phone number, this method still introduced a substantial number of false positive matches. This proves our initial assumption of matching phone numbers, as unique identifiers to be false.
 
-
 The complete dataset can be accessed [here](https://github.com/WilliamClintC/Geocoding_Documentation/blob/main/Notebooks/1.csv), which includes the latitude and longitude values used for geocoding.
 
 # Discrepancy Analysis
+
+We study this by plotting coordinate discrepancies. Each truck stop entry in the original truck stop directory has a corresponding match to Yellow Pages, Yelp and Truck Stops and Services.
 
 ## Without Yelp and Yellow Pages
 
@@ -36,18 +36,83 @@ If we remove the all Yelp and Yellow Pages entries, we observe point discrepanci
 
 When we include the Yelp and Yellow Pages entries, the discrepancies increase significantly, as shown [in this HTML map](https://github.com/WilliamClintC/Geocoding_Documentation/blob/main/Data/2.html). The discrepancies are so numerous that the HTML visualization becomes difficult to interpret due to the overwhelming number of false matches. To take this into account, the current visualization has been redone to display only point discrepancies with distances greater than 16 km.
 
+Ideally, we should only observe small discrepancies, as shown below:
+
+::: figure
+![Map showing expected small discrepancies.](Images/Screenshot%202025-07-28%20122252.png){fig-alt="Map showing expected small discrepancies." height="350px"}
+:::
+
+Unfortunately, we observe a map similar to the following, which shows very large discrepancies—some more than 16 km, even crossing state lines:
+
+::: figure
+![Map showing large discrepancies, including some crossing state lines.](Images/Screenshot%202025-07-28%20122549.png){fig-alt="Map showing large discrepancies, including some crossing state lines." height="350px"}
+:::
+
+This is a false positive, as Yelp and Yellow Pages should not match locations that are clearly across state lines and not even within our target four states, despite our filtering of the four states.
+
 ## General Overview
 
-For a high-level overview of the geocoded points, see [this map](https://github.com/WilliamClintC/Geocoding_Documentation/blob/main/Data/0.html), which provides a visualization of all the coordinate data regardless of accuracy.
+For a high-level overview of the geocoded points, see [this map](https://github.com/WilliamClintC/Geocoding_Documentation/blob/main/Data/0.html), which provides a visualization of all the coordinate data regardless of accuracy. Each line corresponds to the coordinate discrepancy, of one location.
 
-# Next Steps
+# Possible Steps
 
 This issue could potentially be addressed through **manual review**, although this approach has limitations. Some discrepancies are not clearly identifiable as errors ("splitting hairs"), which complicates the process. At this stage, an **important research judgment** must be made.
 
-The observed differences might simply reflect the **age of the locations**. Perhaps some businesses have moved. Alternatively, the discrepancies could stem from **genuine geocoding errors**. 
+The observed differences might simply reflect the **age of the locations**. Perhaps some businesses have moved. Alternatively, the discrepancies could stem from **genuine geocoding errors**.
 
-One possible approach is to compute and use the **centroid** of the available coordinates. Another option is to introduce a **third validation step**. For example, we could use address observations to cross-check the coordinates using **geocoding API** such as Google Maps and I-Exit coordinate data as well. I-Exit validation would be straightforward but using google maps geocoding API, would also run into similar concerns about age discrepancies of locations. 
+One possible approach is to compute and use the **centroid** of the available coordinates. Another option is to introduce a **third validation step**. For example, we could use address observations to cross-check the coordinates using **geocoding API** such as Google Maps and I-Exit coordinate data as well. I-Exit validation would be straightforward but using google maps geocoding API, would also run into similar concerns about age discrepancies of locations.
 
-Another potential step is to perform string matching between all phone number based matches against the original data. However, this approach would likely require research judgment, as string matching is not perfect as well. 
+Another potential step is to perform string matching between all phone number-based matches against the original data. However, this approach would likely require research judgment, as string matching is not perfect either. String matching could potentially address egregious mismatches, particularly where the match is clearly not on the same state line.
 
 While we have outlined several potential next steps in this paper, the decision on how to proceed ultimately involves a degree of research judgment, more an interpretive choice than an objective one. As such, any input or guidance would be greatly appreciated.
+
+# Error Analysis
+
+## Are the errors originating from HQ data? 
+
+Upon reviewing the locations with the highest discrepancies, we find that the errors are not due to HQ-related issues, but rather appear to be error noise within the data. For example, consider the entry below:
+
+::: figure
+![Entry with phone number 530-275-4375 incorrectly points to Florida.](Images/Screenshot%202025-07-28%20221302.png){fig-alt="Entry with phone number 530-275-4375 incorrectly points to Florida." height="250px"}
+:::
+
+This entry incorrectly points to a location in Florida. However, when compared to another source:
+
+::: figure
+![Alternate source showing correct location in California for phone number 530-275-4375.](Images/Screenshot%202025-07-28%20221357.png){fig-alt="Alternate source showing correct location in California for phone number 530-275-4375." height="250px"}
+:::
+
+it is clear that the phone number should correspond to a location in California. Yelp data further confirms the correct location.
+
+Another example involves the following entry:
+
+::: figure
+![Phone number 435-896-5050 matches three locations: one truck stop and two Western Union branches.](Images/Screenshot%202025-07-28%20221522.png){fig-alt="Phone number 435-896-5050 matches three locations: one truck stop and two Western Union branches." height="250px"}
+:::
+
+where the phone number 435-896-5050 matches three locations: one is a truck stop, while the others are Western Union branches, with one Western Union location in New Jersey (see below):
+
+::: figure
+![Western Union location in New Jersey matching phone number 435-896-5050.](Images/Screenshot%202025-07-28%20221547.png){fig-alt="Western Union location in New Jersey matching phone number 435-896-5050." height="250px"}
+:::
+
+## Is phone number matching the source of error? 
+
+We also investigated potential issues with phone number matching, but this does not appear to be the primary cause. The errors likely stem from internal inconsistencies within the data itself.
+
+## Magnitude of the Error
+
+We measure the maximum distances across every coordinate discrepancy. We then plot the frequency across each truck stop. We see that there is no systematic error with the data.
+
+::: figure
+![Frequency plot of maximum coordinate discrepancies across truck stops.](Images/1.png){fig-alt="Frequency plot of maximum coordinate discrepancies across truck stops." height="250px"}
+:::
+
+The problem may not be as egregious as the map initially suggests. Upon closer inspection, there are 450 rows with discrepancies greater than 10 miles, corresponding to about 75 unique locations.
+
+# Next Steps 
+
+Upon getting feedback we mentioned the strategy is to focus on
+
+1.  Redownload the data: The RVers dataset was previously downloaded without geocoordinates and needs to be re-acquired.
+2.  Apply post filtering: Implement a constraint to exclude non-truck stop entities from the dataset. For example, Western Union locations will be excluded even if they match a phone number.
