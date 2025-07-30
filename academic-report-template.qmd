@@ -1,0 +1,112 @@
+---
+title: "Geocoding Truck Stops Report"
+author: "William Co"
+date: today
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    geometry: margin=1in
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+abstract: |
+  This is the abstract of the academic report. Summarize the main points and findings here.
+keywords: [sample, academic, report, quarto]
+---
+
+# Introduction
+
+This document is prepared for Prof. Ron Yang, who will be returning to meet with us. It outlines the current progress of the geocoding task.
+
+# Setup
+
+We are working with a dataset that includes truck stop details. However, the dataset lacks geographic coordinates (latitude and longitude). The objective of this project is to extract and assign accurate coordinates to each entry.
+
+The main challenge arises from the inconsistent formatting of addresses. Some entries contain full addresses, while others include only road names, highway exits, or mile markers. The lack of standardization complicates automated geocoding.
+
+The dataset also required extensive data cleaning to be useful.
+
+# Approach
+
+## Initial Approach
+
+The first approach involved directly submitting address strings to the Google Maps APIs (Geocoding and Places). However, this method encountered several limitations:
+
+-   The API struggled with inconsistent or non-standard address formats.
+-   We could not reliably verify the accuracy of returned locations.
+-   Many addresses returned irrelevant or incorrect coordinates.
+
+### Methods Tried With Initial Approach
+
+-   Constraining search to specific regions (both hard and soft constraints).
+-   Using the Nearby Search function (by place type and radius).
+-   Cleaning and standardizing address strings before submission.
+-   Exploring and comparing the Google Geocoding and Places APIs.
+
+Although the Google API offers convenience, it lacks reliability in the context of our dataset.
+
+## Second Approach
+
+The second approach leverages a standardized and reliable feature of our dataset: phone numbers. These are consistently formatted and can be used to match entries with external data sources. We utilized two key websites for this task:
+
+-   [Truck Stops and Services](https://www.truckstopsandservices.com/)
+-   [RV and Travelers Directory](http://www.rvandtravelers.com/)
+
+This would be an example of the webpage:
+
+![](images/Screenshot%202025-07-16%20001757.png){fig-alt="Webpage Example 1" width="80%"}\
+
+![](images/Screenshot%202025-07-16%20002154.png){fig-alt="Webpage Example 2" width="80%"}
+
+Below is an example of the data available from these sources:
+
+state_id, state, name, href, full_url, stop_type, Chain, Latitude, Longitude, Highway, Exit, Street Address, City, State, Postal Code, Phone, Phone 2, Fax, Hours of Operation, \# of Parking Spots, \# of Reserved Parking Spots, \# of Paid Parking Spots, \# of Fuel Lanes, \# of Showers, \# of Truck Service Bays, Phone 3, Mile Marker, Unleaded, Diesel, Bulk Def, Propane, \# of Men's Showers, Phone 4, Mailing Address, Phone 5, Road Name, https, htp, http
+
+Both websites maintain structured records that include phone numbers, making them effective for cross-referencing. Using these sources, we employed two main matching strategies:
+
+1.  **Phone Number Matching**: Directly matching entries based on phone numbers.
+2.  **Place Name to ZIP Code Matching**: This strategy involves a hierarchical matching process. First, the state or ZIP code must match. Next, the city or highway exit must align. After that, the road name must match. Finally, the business or place name must match.
+
+### Results
+
+-   Phone number matching alone successfully resolved 1,795 out of 2,333 entries (76.94%).
+-   Matching based on ZIP code and place name resolved 1,900 out of 2,333 entries (81.44%).
+-   By combining both methods, we were able to resolve 2,090 out of 2,333 entries (89.58%).
+
+This approach significantly improved match rates compared to the first method and provided a more verifiable matching process.
+
+## Third Approach
+
+The third approach leverages the Yelp API, which is unique in allowing phone number-based search queries. This feature makes it particularly well-suited to our dataset, which contains standardized phone numbers.
+
+this is an example of the data we were able to extract from yelp Original_Phone Name Rating Review_Count Address City State Zip_Code Phone Categories Latitude Longitude Price Is_Closed URL
+
+### Results with Yelp API
+
+-   Missing: 481 out of 2,333 entries (20.62%)
+-   Successfully matched: 1,852 out of 2,333 entries (79.38%)
+
+### Combined Results (Approaches 2 + 3)
+
+-   Matches before Yelp: 2,090 out of 2,333 entries (89.58%)
+-   Matches with Yelp integration: 2,189 out of 2,333 entries (93.83%)
+
+## Fourth Approach
+
+We further improved our match rate using [YellowPages](https://www.yellowpages.com/), which also allows direct phone number queries. Incorporating this data source, we achieved a match rate of 2,314 out of 2,333 entries—reducing the number of unmatched entries to just 19. This corresponds to a 99.19% success rate. Given the small number of remaining unmatched entries, manual verification is now a feasible next step.
+
+## Current Project: iExit Integration
+
+We recently succeeded in scraping the iExit platform, which provides comprehensive data on every highway exit in the United States. This significantly enhances our ability to geolocate entries that rely on highway exit-based addresses.
+
+## Utilities Developed
+
+To support manual validation, we developed a custom GUI tool to assist future research assistants. This interface displays two columns—original dataset vs. matched results—side-by-side, allowing quick visual inspection and correction without requiring coding experience. *(Attach GUI screenshot here)*
+
+## Next Steps
+
+-   Finalize code cleaning for future reproducibility.
+-   Conduct manual verification of the remaining 19 unmatched entries.
+-   Begin integration of iExit data for edge-case resolution.

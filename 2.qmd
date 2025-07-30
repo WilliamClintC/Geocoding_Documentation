@@ -68,7 +68,7 @@ While we have outlined several potential next steps in this paper, the decision 
 
 # Error Analysis
 
-## Are the errors originating from HQ data? 
+## Are the errors originating from HQ data?
 
 Upon reviewing the locations with the highest discrepancies, we find that the errors are not due to HQ-related issues, but rather appear to be error noise within the data. For example, consider the entry below:
 
@@ -96,7 +96,7 @@ where the phone number 435-896-5050 matches three locations: one is a truck stop
 ![Western Union location in New Jersey matching phone number 435-896-5050.](Images/Screenshot%202025-07-28%20221547.png){fig-alt="Western Union location in New Jersey matching phone number 435-896-5050." height="250px"}
 :::
 
-## Is phone number matching the source of error? 
+## Is phone number matching the source of error?
 
 We also investigated potential issues with phone number matching, but this does not appear to be the primary cause. The errors likely stem from internal inconsistencies within the data itself.
 
@@ -110,9 +110,86 @@ We measure the maximum distances across every coordinate discrepancy. We then pl
 
 The problem may not be as egregious as the map initially suggests. Upon closer inspection, there are 450 rows with discrepancies greater than 10 miles, corresponding to about 75 unique locations.
 
-# Next Steps 
+-   75 False positives
+-   30 Unmatched
 
-Upon getting feedback we mentioned the strategy is to focus on
+# Next Steps
 
-1.  Redownload the data: The RVers dataset was previously downloaded without geocoordinates and needs to be re-acquired.
-2.  Apply post filtering: Implement a constraint to exclude non-truck stop entities from the dataset. For example, Western Union locations will be excluded even if they match a phone number.
+Upon receiving feedback, our primary focus is now on improving accuracy. The next steps are as follows:
+
+1.  Redownload the data: The RVers dataset was previously downloaded without coordinates and needs to be re-acquired. (In Progress, the code takes more than 24 hours to run)
+2.  Apply post filtering: Implement a constraint to exclude non-truck stop entities from the dataset. For example, Western Union locations will be excluded even if they match a phone number. Remove mismatched states.
+3.  Removed blatantly false states that are not part of AZ, NV, CA, UT
+4.  Remove phone matches where zipcode does not match.
+
+# Appendix
+
+## More Examples
+
+We see here that we cannot simply remove any non-truck stop entry. Some phone numbers only match to business locations—not necessarily truck stops.
+
+::: figure
+![Phone number match to business location, not necessarily truck stop.](Images/Screenshot%202025-07-30%20005331.png){fig-alt="Phone number match to business location, not necessarily truck stop." height="250px"}
+:::
+
+We also see that the top place recommended by the search engine is not necessarily the correct match.
+
+::: figure
+![Top place recommended by search engine is not necessarily the correct match.](Images/Screenshot%202025-07-30%20005938.png){fig-alt="Top place recommended by search engine is not necessarily the correct match." height="250px"}
+:::
+
+The correct match is sometimes presented only after clicking into the result.
+
+::: figure
+![Match is presented when clicking inside.](Images/Screenshot%202025-07-30%20005955.png){fig-alt="Correct match is present when clicking inside." height="250px"}
+:::
+
+There are also mismatches associated with place name matches. For example:
+
+::: figure
+![Place name mismatch 1](Images/Screenshot%202025-07-30%20013000.png){fig-alt="Place name mismatch 1" width="300px"}
+:::
+
+::: figure
+![Place name mismatch 2](Images/Screenshot%202025-07-30%20013515.png){fig-alt="Place name mismatch 2" width="300px"}
+:::
+
+Both of these examples are a place name match, but they clearly are not.
+
+Once we remove the easily addressable errors, we are left with mismatches that arise from data inaccuracies on the source websites.
+
+::: figure
+![Website data error](Images/Screenshot%202025-07-30%20015623.png){fig-alt="Example of data error from the website" width="300px"}
+:::
+
+In some cases, we face a data ambiguity, such as having to choose between "CAT Scale" and "99 Travel Center."
+
+::: figure
+![CAT Scale vs 99 Travel Center](Images/Screenshot%202025-07-30%20020109.png){fig-alt="Ambiguity between CAT Scale and 99 Travel Center" width="300px"}
+:::
+
+Here, **99 Travel Center** is the original (correct) location.
+
+We also find genuine geolocation errors on the *Truck Stops and Services* website. For example, the location we were targeting is shown below:
+
+::: figure
+![Correct location on map](Images/Screenshot%202025-07-30%20021704.png){fig-alt="Correct location for 99 Travel Center" width="300px"}
+:::
+
+However, using the coordinates from *Truck Stops and Services* leads us here:
+
+::: figure
+![Incorrect geolocation result](Images/Screenshot%202025-07-30%20021855.png){fig-alt="Incorrect result using faulty coordinates" width="300px"}
+:::
+
+Not only is this not the correct 99 Travel Center, but the indicated address also does not match the expected location. The actual, correct address is:
+
+::: figure
+![Correct address location](Images/Screenshot%202025-07-30%20021723.png){fig-alt="Verified correct address for 99 Travel Center" width="300px"}
+:::
+
+This final location is hundreds of miles away from the incorrectly suggested one.
+
+# Final Results
+
+100 rows with greater than 10 mile discrepancy 17 places. All of these are phone based matches. We are fixing bugs in place name matching.
