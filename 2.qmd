@@ -12,8 +12,7 @@ format:
     number-sections: true
     theme: cosmo
 abstract: |
-  This report documents the geocoding validation process, highlighting discrepancies arising from integrating data sources like Yelp and Yellow Pages. Despite matching entries by phone number, these platforms introduce a high rate of false positives. We compare point discrepancies with and without these sources and visualize the magnitude of spatial discrepancies. The report discusses the potential causes of these inconsistencies, ranging from business relocations to outright geocoding errors, and discusses strategies for post-processing, including centroid averaging and external geocoding API cross-checks.
-
+  This report documents the geocoding validation process, highlighting discrepancies arising from integrating data sources like Yelp and Yellow Pages. Despite matching entries by phone number, these platforms introduce a high rate of false positives. We apply a variety of filtering to correct for this. We then provide a detailed account of the types of errors observed and offer a numerical estimate of the remaining discrepancies. These errors represent a small proportion of the entire dataset, affecting approximately 17 locations.
 
 keywords: [geocoding, data cleaning, location accuracy, Yelp, Yellow Pages, truck stops]
 ---
@@ -192,4 +191,8 @@ This final location is hundreds of miles away from the incorrectly suggested one
 
 # Final Results
 
-100 rows with greater than 10 mile discrepancy 17 places. All of these are phone based matches. We are fixing bugs in place name matching.
+100 rows with greater than 10 mile discrepancy 17 places. All of these are phone based matches. We are fixing bugs in place name matching. The final map below shows coordinate discrepancies greater than 2 miles:
+
+::: figure
+![Map showing coordinate discrepancies greater than 2 miles.](Images/Screenshot%202025-07-30%20122618.png){fig-alt="Map showing coordinate discrepancies greater than 2 miles" width="350px"}
+:::
