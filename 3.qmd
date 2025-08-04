@@ -53,3 +53,15 @@ explaining the "false" place name matches. The place name matches introduced a s
 ive matched everything down to 200 meters. 
 
 next step is now to finalize the lat and long coordinates. I will average out the 300 meter discrepancies to the midpoint, 
+
+potential 4th source of lat long is google geocoding api input of adresses along with Iexit. This is more complex as not all adresses are proper and not all adresses are exit. 
+
+after doign manual matches there are a select few unmatch entries which i think can be resolved if we use google geodocing api given that the unmatch places are ussually intersection cocorindates C:\Users\clint\Desktop\Geocoding_Documentation\Images\Screenshot 2025-08-04 131610.png see th image below for exmaple. 
+
+mapquest seems to be a good resource for manually matchign the unamatched places so is truckmap.com
+
+i comeplte the manuale tnries "C:\Users\clint\Desktop\Geocoding_Documentation\Images\Screenshot 2025-08-04 134651.png"
+
+after doign all of this there are 13 places left to be manually corrected for 
+mos tof them are old which I assume is where teh errors are comeing from 
+there does not seem to be any discernible pattern aside from that 
