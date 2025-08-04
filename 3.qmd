@@ -42,7 +42,7 @@ This refined approach has left us with only five locations having a discrepancy 
 
 The five remaining locations with significant discrepancies were manually verified. The analysis revealed no single, discernible pattern to the errors. Instead, they fall into two main categories:
 
-1.  **Geocoding Inaccuracy**: In some cases, the geocoding service returned coordinates with a spatial offset from the actual address. For a given address intended to map to location *X*, the service returned coordinates at *X + ε*, where *ε* represents the spatial error.
+1.  **Geocoding Inaccuracy**: In some cases, the geocoding service returned coordinates with a spatial offset from the actual address. For a given address intended to map to location *X*, the service returned coordinates at *X + E*, where *E* represents the spatial error.
 
 2.  **Non-Physical Addresses**: Another source of error was the presence of Post Office (P.O.) boxes instead of physical street addresses in the source data. P.O. boxes do not represent a physical location and thus cannot be accurately geocoded for our purposes (see Figure 4).
 
