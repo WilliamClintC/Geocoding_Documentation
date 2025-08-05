@@ -75,4 +75,8 @@ The finalized geocoded dataset is available at the following link:
 
 Given the small (13) number of unresolved cases, further automation is not justified, nor is it likely to be reliable. Though, we are open hearing any other thoughts on the matter. 
 
-these leaves two options. Manual matching against geo-coordinate (Google Geocoding API & I-Exit) matching.
+These leaves two options. Manual matching against geo-coordinate (Google Geocoding API & I-Exit) matching.
+
+The final map is as follows: [Interactive Map of Geocoded Truck Stops](https://github.com/WilliamClintC/Geocoding_Documentation/blob/main/Notebooks/9.html)
+
+![Final geocoded truck stops visualization showing the complete dataset after validation and manual correction.](Images/Screenshot 2025-08-04 174216.png){#fig-final-map}
