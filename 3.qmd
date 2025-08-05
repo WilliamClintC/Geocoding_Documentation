@@ -18,13 +18,22 @@ abstract: |
 keywords: [geocoding, data cleaning, location accuracy, Yelp, Yellow Pages, truck stops]
 ---
 
-# Introduction
+# Progress
 
+## Bug Fixes on Scraping Code
 This section details the iterative process of refining our geocoding validation. An initial update addressed a bug in latitude and longitude extraction from the "RVers and Travelers" website. Subsequent analysis focused on resolving discrepancies between different data sources.
 
-Initially, we attempted to match locations based on properties such as primary and secondary phone numbers. However, this approach proved complex and prone to error. A more effective strategy was developed, which involves matching locations based on the minimum distance between them. The closest geographic match is considered the correct one. This method significantly reduced the number of discrepancies.
+## New Matching Process
 
-For instance, postal code input errors were identified as a source of discrepancies. The initial analysis, including outliers, showed a number of locations with a discrepancy of less than one mile (see Figure 1).
+Initially, we attempted to extract geo-coordinates through a reduction approach. While this method allowed us to observe various geo-coordinates from different sources, it provided no reliable mechanism to determine which coordinates were accurate. This approach proved complex and prone to error due to the scale of the data. 
+
+To address these limitations, we developed a more effective strategy based on geographic proximity matching. This method involves calculating the minimum distance between corresponding locations from different data sources, with the closest geographic match considered the most accurate. This distance-based validation approach significantly reduced the number of discrepancies in our dataset. This method operates on the intuition that when two independent data sources yield similar coordinates for the same location, their agreement likely indicates the correct position.
+
+## Previous Matching Process
+
+One big problem with the previous matching process was that we can not accurately rely on input data, as a means to compare. For example, a place might be mark as Zipcode 12345 but its true zipcode is 54321. By using the nearest distance-based validation approach, we bypass this concern. 
+
+During this process, we identified postal code input errors as a primary source of location discrepancies. Our initial analysis, revealed a substantial number of locations with discrepancies of less than one mile (see Figure 1).
 
 ![Analysis of discrepancies less than one mile.](Images/2.png){#fig-less-than-one-mile}
 
@@ -32,36 +41,38 @@ Including all outliers, the dataset initially appeared as shown in Figure 2.
 
 ![Dataset including all outliers.](Images/3.png){#fig-outliers}
 
-After implementing the minimum distance comparison method, we were able to reduce the number of locations with a discrepancy greater than one mile from seven to five. The results of this improved approach are visualized in Figure 3.
+After implementing the minimum distance comparison method, we successfully reduced the number of locations with discrepancies greater than one mile from seven to five. The results of this improved approach are visualized in Figure 3.
 
 ![Results of the minimum distance comparison approach.](Images/4.png){#fig-min-distance}
 
-This refined approach has left us with only five locations having a discrepancy of more than one mile, a significant improvement in data accuracy.
+Our new methodology resulted in only five locations exhibiting discrepancies of more than one mile, representing a significant improvement in overall data accuracy.
 
 # Manual Verification of Remaining Discrepancies
 
-The five remaining locations with significant discrepancies were manually verified. The analysis revealed no single, discernible pattern to the errors. Instead, they fall into two main categories:
+The five remaining locations with significant discrepancies were manually verified. The analysis revealed no single, discernible pattern to the errors. No single data source was responsible for the errors.  Instead, they fall into two main categories:
 
 1.  **Geocoding Inaccuracy**: In some cases, the geocoding service returned coordinates with a spatial offset from the actual address. For a given address intended to map to location *X*, the service returned coordinates at *X + E*, where *E* represents the spatial error.
 
-2.  **Non-Physical Addresses**: Another source of error was the presence of Post Office (P.O.) boxes instead of physical street addresses in the source data. P.O. boxes do not represent a physical location and thus cannot be accurately geocoded for our purposes (see Figure 4).
+2.  **Non-Physical Addresses**: Another source of error was the presence of Post Office (P.O.) boxes instead of physical street addresses in the source data.
 
 ![An example of a P.O. Box listed as an address.](Images/Screenshot 2025-08-03 180347.png){#fig-po-box}
 
-explaining the "false" place name matches. The place name matches introduced a small bit of error because We made sure to match down to the road level. Which is fine but not as accurate as if we match down to the label level. 
+## Results
+Following the matching process, all locations have been reconciled to within 200 meters. The next step involves finalizing geo-coordinates by using the midpoints across two slightly different coordinates. 
 
-ive matched everything down to 200 meters. 
+A potential fourth source of geo-coordinates is the Google Geocoding API, which can be used in conjunction with I-exit data. However, this approach is more complex, as not all addresses are formatted correctly and not all entries correspond to highway exits. Not to mention, matching based on exit location can introduce errors greater than one mile.
 
-next step is now to finalize the lat and long coordinates. I will average out the 300 meter discrepancies to the midpoint, 
+MapQuest and TruckMap.com are good resources for manually matching these remaining locations.
 
-potential 4th source of lat long is google geocoding api input of adresses along with Iexit. This is more complex as not all adresses are proper and not all adresses are exit. 
+I completed the manual entries. Below is an example of the process.
 
-after doign manual matches there are a select few unmatch entries which i think can be resolved if we use google geodocing api given that the unmatch places are ussually intersection cocorindates C:\Users\clint\Desktop\Geocoding_Documentation\Images\Screenshot 2025-08-04 131610.png see th image below for exmaple. 
+![Manual Matches Example](Images/Screenshot 2025-08-04 134651.png){#fig-manual}
 
-mapquest seems to be a good resource for manually matchign the unamatched places so is truckmap.com
+After completing these steps, 13 locations remain that require manual correction. Most of these are old (2008 and earlier) entries, which likely account for the observed errors. No consistent pattern was identified among these remaining discrepancies (aside from age).
 
-i comeplte the manuale tnries "C:\Users\clint\Desktop\Geocoding_Documentation\Images\Screenshot 2025-08-04 134651.png"
+The finalized geocoded dataset is available at the following link:
+[Final Geocoded Dataset (10.csv)](https://github.com/WilliamClintC/Geocoding_Documentation/blob/main/Notebooks/10.csv)
 
-after doign all of this there are 13 places left to be manually corrected for 
-mos tof them are old which I assume is where teh errors are comeing from 
-there does not seem to be any discernible pattern aside from that 
+Given the small (13) number of unresolved cases, further automation is not justified, nor is it likely to be reliable. Though, we are open hearing any other thoughts on the matter. 
+
+these leaves two options. Manual matching against geo-coordinate (Google Geocoding API & I-Exit) matching.
