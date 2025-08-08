@@ -1,0 +1,23 @@
+---
+title: "Geocoding Truck Stops Update"
+author: "William Co"
+date: today
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    geometry: margin=1in
+    fig-pos: "H"
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+abstract: |
+  This report documents the geocoding validation process, highlighting discrepancies arising from integrating data sources like Yelp and Yellow Pages. Despite matching entries by phone number, these platforms introduce a high rate of false positives. We apply a variety of filtering to correct for this. We then provide a detailed account of the types of errors observed and offer a numerical estimate of the remaining discrepancies. These errors represent a small proportion of the entire dataset, affecting approximately 17 locations.
+
+keywords: [geocoding, data cleaning, location accuracy, Yelp, Yellow Pages, truck stops]
+---
+
+# Progressive 
+
+initially I treated phone match and place match is different sources but i realize now thats silly and i should jsut treat thm as one source
