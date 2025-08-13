@@ -12,7 +12,6 @@ format:
     number-sections: true
     theme: cosmo
 abstract: |
-  This report documents the geocoding of U.S. truck stop data, addressing challenges from inconsistent address formats. Using phone number matching and structured data from Truck Stops and Services, Yelp, Yellow Pages, and iExit, we achieved a 99.19% match rate. A custom interface was developed to support manual verification and ensure data accuracy. 
 
 keywords: [sample, academic, report, quarto]
 ---
@@ -20,11 +19,11 @@ keywords: [sample, academic, report, quarto]
 
 # Setup
 
-We are working with a truck stop directory dataset that includes truck stop details. However, the dataset lacks geographic coordinates (latitude and longitude). The objective of this project is to extract and assign accurate coordinates to each entry.
+This study utilizes a comprehensive truck stop directory dataset containing information about individual truck stops. Notably, the original dataset does not include geographic coordinates (latitude and longitude), which are essential for spatial analysis and mapping. The primary objective of this research is to systematically extract and assign accurate geographic coordinates to each truck stop entry.
 
-The main challenge arises from the inconsistent formatting of addresses. Some entries contain full addresses, while others include only road names, highway exits, or mile markers. The lack of standardization complicates automated geocoding. 
+A significant challenge encountered in this process stems from the inconsistent formatting of address information. While some entries provide complete street addresses, others list only road names, highway exits, or mile markers. This lack of standardization complicates the process of automated geocoding and necessitates additional data processing steps.
 
-The dataset also required extensive data cleaning to be useful.
+Furthermore, the dataset required extensive cleaning to ensure its suitability for analysis. This included standardizing address formats.
 
 # Challenges
 ## Inconsistent Addresses
@@ -39,89 +38,51 @@ This variability in address formats presents a significant challenge for automat
 
 ## Age
 
-Some locations in the dataset are quite old, making it difficult to find current information using modern mapping services. In these cases, it is often necessary to consult dated websites to locate and verify these places. Human judgment is required to determine whether such locations still exist or have been repurposed for other uses. 
+A further complication arises from the temporal nature of the dataset. Several locations are historical or no longer in operation, which poses challenges when attempting to verify their existence using contemporary mapping services. In such cases, it was necessary to consult archival web resources and historical records to confirm the status and location of these truck stops. This process often required subjective judgment to determine whether a site remains active, has been repurposed, or no longer exists.
 
 # Data Scraping
 
-We use the following websites to scrape geographic coordinates. Each time we scrape these websites, we extract the latitude and longitude of the truck stops.
+To obtain accurate geographic coordinates for each truck stop, we systematically collected data from several reputable online sources. For every truck stop entry, we extracted latitude and longitude information from the following platforms:
 
-## Truck Stops and Services Website 
+- **Truck Stops and Services / RV and Travelers Directory:**  
+  We began by scraping data from [Truck Stops and Services](https://www.truckstopsandservices.com/) and the [RV and Travelers Directory](http://www.rvandtravelers.com/). These websites were selected for their consistent formatting and comprehensive coverage of truck stop locations. The structured nature of their listings facilitated reliable extraction of geographic coordinates and associated metadata.
 
-The first step leverages a website aimed at truckers and RV travelers called [Truck Stops and Services](https://www.truckstopsandservices.com/) and the [RV and Travelers Directory](http://www.rvandtravelers.com/). Data from these websites is scraped due to their consistent formatting and the extensive truck stop information they provide. 
+- **Yelp:**  
+  The Yelp API was utilized due to its unique capability to perform searches based on phone numbers, which aligns well with our dataset’s standardized contact information. This allowed for precise matching and retrieval of business coordinates, even in cases where address information was incomplete or ambiguous.
 
-This would be an example of the webpage:
+- **Yellow Pages:**  
+  We also scraped [YellowPages](https://www.yellowpages.com/), leveraging its support for phone number-based queries. This provided an additional layer of verification and expanded our ability to cross-reference locations.
 
-
-![Example of the Truck Stops and Services website interface](images/Screenshot%202025-07-16%20001757.png){fig-alt="Webpage Example 1" width="80%"}
-
-
-![Example of the RV and Travelers website interface](images/Screenshot%202025-07-16%20002154.png){fig-alt="Webpage Example 2" width="80%"}
-
-Another example of the Truck Stops and Services website interface.
-
-
-
-The complete data available from this scraping is available in [Appendix: Truck Stops and Services/ RV and Travelers Data Dictionary](#truck-stops-and-services-rv-and-travelers-data-dictionary). 
-
-
-
-## Yelp 
-
-Next, we leverage the Yelp API, which is unique in allowing phone number-based search queries. This feature makes it particularly well-suited to our dataset, which contains standardized phone numbers.
-An example of the Yelp website interface is shown below:
-
-::: {.figure}
-![Example of the Yelp website interface](images/Screenshot%202025-07-16%20013928.png){fig-alt="Yelp Example 1" width="80%"}
-:::
-
-::: {.figure}
-![Another example of the Yelp website interface](images/Screenshot%202025-07-16%20013953.png){fig-alt="Yelp Example 2" width="80%"}
-:::
-
-The full list of data fields extracted from Yelp is available in the [Appendix: Yelp Data Dictionary](#yelp-data-dictionary). 
-
-## Yellow Pages 
-
-We then scrape [YellowPages](https://www.yellowpages.com/), which also allows direct phone number queries through web scraping. Examples of the website interface are shown below:
-
-::: {.figure}
-![Example of the YellowPages website interface](images/Screenshot%202025-07-16%20011959.png){fig-alt="YellowPages Example 1" width="80%"}
-:::
-
-::: {.figure}
-![Another example of the Yellow Pages website interface](images/Screenshot%202025-07-16%20012037.png){fig-alt="YellowPages Example 2" width="80%"}
-:::
-
- The full list of data fields extracted from Yellow Pages is available in the [Appendix: Yellow Pages Data Dictionary](#yellow-pages-data-dictionary). 
-
+For each source, we captured not only the coordinates but also relevant business and location attributes, as detailed in the respective data dictionaries in the Appendix. By integrating data from multiple platforms, we increased the likelihood of obtaining accurate and up-to-date geographic information for each truck stop.
 
 ## Entry Matching
 
-After scraping from these three websites, we now have three reference datasets to match against our original truck stops directory.
+Following the data collection phase, three independent reference datasets were assembled from the aforementioned online sources. The next step involved systematically matching these reference datasets to the original truck stop directory to assign geographic coordinates to each entry.
 
-We developed two main methodologies for matching. 
+To accomplish this, we developed two principal methodologies:
 
 
-### Phone Number Matching (Truck Stops and Services): 
+### Phone Number Matching
 
-Directly matching entries based on phone numbers. We match the phone numbers from Yelp, Yellow Pages, and Truck Stops and Services to the original truck stop directory. 
+The first approach relies on direct matching of entries based on phone numbers. Phone numbers obtained from Yelp, Yellow Pages, and Truck Stops and Services are compared to those in the original truck stop directory. 
 
-### Place Name to ZIP Code Matching 
+### Place Name to ZIP Code Matching
 
- This strategy involves a hierarchical matching process. First, the state or ZIP code must match. Next, the city or highway exit must match. After that, the road name must match. Finally, the business or place name must match. 
+The second approach employs a hierarchical matching strategy. Initially, entries are filtered by state or ZIP code. Subsequently, matches are refined by city or highway exit, followed by road name, and finally by business or place name. 
 
-Using these matching processes, each entry in the original truck stop directory can be matched in four ways: three by phone number matching (from Yelp, Yellow Pages, and Truck Stops and Services) and one by place name to ZIP code matching.
+Using these matching methodologies, each entry in the original truck stop directory could be associated with up to four potential matches: three derived from phone number-based matching (utilizing data from Yelp, Yellow Pages, and Truck Stops and Services) and one from the hierarchical place name to ZIP code matching approach. This comprehensive strategy maximized the likelihood of accurately linking each truck stop entry to its corresponding geographic coordinates.
 
-## Post Matching
+# Post Matching
 
-### False Positives
-We encountered numerous false positive matches after the initial matching process. Yelp and Yellow Pages are known to have inconsistent phone numbers, and all the scraped data sources have documented examples of incorrect latitude and longitude coordinates. This leads to multiple possible latitude and longitude values for a single truck stop directory entry.
+## False Positives
 
-To address this, we developed the following coordinate matching methodology.
+A notable challenge encountered during the matching process was the occurrence of false positives. Inconsistencies in phone number records, particularly within Yellow Pages, and documented inaccuracies in latitude and longitude values across all data sources resulted in multiple, and sometimes conflicting, geographic coordinates for a single truck stop entry.
 
-### Coordinate Matching
+To mitigate these issues, we implemented a systematic coordinate validation methodology as described below.
 
-Suppose we have a Yelp source, where the phone number matches to one unique latitude and longitude. Next, the Truck Stops and Services (Phone) source matches to two different latitude and longitude pairs, while Truck Stops and Services (Place Match) matches to one distinct coordinate. There is no match for Yellow Pages. Finally, we have the original $\text{entry}_n$ from the truck stop directory. In this scenario, we observe several possible coordinates for a single truck stop, but there is no reliable method to determine which coordinate is correct.
+## Coordinate Matching
+
+Suppose we have a Yelp source, where the phone number matches to two  unique latitude and longitude. Next, the Truck Stops and Services (Phone) source matches to two different latitude and longitude pairs, while Truck Stops and Services (Place Match) matches to one distinct coordinate. There is no match for Yellow Pages. Finally, we have the original $\text{entry}_n$ from the truck stop directory. In this scenario, we observe several possible coordinates for a single truck stop, but there is no reliable method to determine which coordinate is correct.
 
 Suppose we also $\text{entry}_{n+1}$ where we have multiple coordinates from the Truck Stops and Services (Place Match) source but no matches from other sources.
 
@@ -129,12 +90,14 @@ Let $C_i$ represent coordinate pairs (latitude, longitude) where $C_i = (\text{l
 
 | Data Source | Yelp | Truck Stops and Services (Phone) | Truck Stops and Services (Place Match) | Yellow Pages |
 |:------------|:-----|:----------------------------------|:---------------------------------------|:-------------|
-| $\text{entry}_n$ | $C_1$ | $C_2, C_3$ | $C_4$ | $\emptyset$ |
+| $\text{entry}_n$ | $C_0,C_1$ | $C_2, C_3$ | $C_4$ | $\emptyset$ |
 | $\text{entry}_{n+1}$ | $\emptyset$ | $\emptyset$ | $C_5, C_6, C_7$ | $\emptyset$ |
 
-For $\text{entry}_n$, we have the set of possible coordinates $\mathcal{C}_n = \{C_1, C_2, C_3, C_4\}$, where each coordinate represents a potential location for the same truck stop entry.
+### Case 1: $\text{entry}_n$
 
-In order to discern the correct coordinate, we make the assumption that a true coordinate $C^*$ exists where if two different sources agree on the same coordinate, it must be correct.
+For $\text{entry}_n$, we have the set of possible coordinates $\mathcal{C}_n = \{C_0, C_1, C_2, C_3, C_4\}$, where each coordinate represents a potential location for the same truck stop entry.
+
+In order to discern the correct coordinate, we make the assumption that a true coordinate $C^*$ exists where if two different sources agree on the same coordinate, the said coordinate must be correct.
 
 **Distance-Based Validation Approach:**
 
@@ -142,20 +105,29 @@ Using this approach, we calculate the Euclidean distance between all coordinate 
 
 $$D_{i,j} = \sqrt{(\text{lat}_i - \text{lat}_j)^2 + (\text{lon}_i - \text{lon}_j)^2}$$
 
-For $\text{entry}_n$, we compute all pairwise distances:
+For $\text{entry}_n$, we compute all pairwise distances between coordinates originating from different data sources (i.e., different columns in the table). Specifically, we exclude distances between coordinates from the same source; for example, $D_{0,1}$ is not considered if both $C_0$ and $C_1$ are from the Yelp column. Similarly, $D_{2,3}$ is excluded as both coordinates are from the Truck Stops and Services (Phone) column. Additionally, $D_{2,4}$ and $D_{3,4}$ are also excluded, as both coordinates are derived from the Truck Stops and Services website, albeit from different matching methods (Phone and Place Match). This ensures that only distances between independent sources are evaluated for validation purposes.
 
-- $D_{1,2}$: distance between Yelp and first Truck Stops coordinate
-- $D_{1,3}$: distance between Yelp and second Truck Stops coordinate  
-- $D_{1,4}$: distance between Yelp and Place Match coordinate
-- $D_{2,4}$: distance between first Truck Stops and Place Match coordinates
-- $D_{3,4}$: distance between second Truck Stops and Place Match coordinates
+The relevant distances for this case are:
 
-The general distance matrix for $n$ coordinates is:
-$$\mathbf{D} = \{D_{i,j} : i,j \in \{1,2,\ldots,n\}, i \neq j\}$$
+- $D_{0,2}$: distance between the first Yelp coordinate and the first Truck Stops and Services (Phone) coordinate
+- $D_{0,3}$: distance between the first Yelp coordinate and the second Truck Stops and Services (Phone) coordinate
+- $D_{0,4}$: distance between the first Yelp coordinate and the Truck Stops and Services (Place Match) coordinate
+- $D_{1,2}$: distance between the second Yelp coordinate and the first Truck Stops and Services (Phone) coordinate
+- $D_{1,3}$: distance between the second Yelp coordinate and the second Truck Stops and Services (Phone) coordinate
+- $D_{1,4}$: distance between the second Yelp coordinate and the Truck Stops and Services (Place Match) coordinate
+
+The set of all relevant pairwise distances is defined as:
+$$
+\mathbf{D} = \{ D_{i,j} : C_i, C_j \text{ are from different sources} \}
+$$
 
 We then identify the minimum distance $\min\{D_{i,j}\}$ in $\mathbf{D}$ and record this value in a dedicated column called `min_distance`. This enables systematic manual correction and error analysis.
 
-Afterward, we flag entries where `min_distance` exceeds 200 meters for manual review and correction. If two coordinates $C_i$ and $C_j$ from different sources are within a small distance (i.e., $\min\{D_{i,j}\}$ is less than 200 meters), we treat their midpoint location as the final coordinate for that entry. If manual correction is required, the updated coordinates $C_i^*$ is recorded as the corrected location.
+Entries where `min_distance` exceeds 200 meters are flagged for manual review and correction. If two coordinates $C_i$ and $C_j$ from different sources are within 200 meters (i.e., $\min\{D_{i,j}\}$ is less than 200 meters), their midpoint is used as the final coordinate for that entry. If manual correction is required, the updated coordinates $C_i^*$ are recorded as the corrected location.
+
+### Case 2: $\text{entry}_{n+1}$
+
+For $\text{entry}_{n+1}$, if only one source provides a match, or if no matches are found, the entry is flagged for manual review and correction. 
 
 # Appendix
 
