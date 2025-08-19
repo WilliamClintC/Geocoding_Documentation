@@ -121,7 +121,7 @@ $$
 
 We then identify the minimum distance $\min\{D_{i,j}\}$ in $\mathbf{D}$ and record this value in a dedicated column called `min_distance`. This enables systematic manual correction and error analysis.
 
-Entries where `min_distance` exceeds 200 meters are flagged for manual review and correction. If two coordinates $C_i$ and $C_j$ from different sources are within 200 meters (i.e., $\min\{D_{i,j}\}$ is less than 200 meters), their midpoint is used as the final coordinate for that entry. If manual correction is required, the updated coordinates $C_i^*$ are recorded as the corrected location.
+Entries where `min_distance` exceeds 200 meters are flagged for manual review and correction. If two coordinates $C_i$ and $C_j$ from different sources are within 200 meters (i.e., $\min\{D_{i,j}\}$ is less than 200 meters), their midpoint is used as the final coordinate for that entry. If manual correction is required, the updated coordinates $C_i^*$ are recorded as the corrected location. Where $C_i^*$ denotes the manually corrected coordinate, obtained from online sources, most notably Google Maps satellite imagery. Additional details regarding the correction can be found in the associated `Match_Comments` field.
 
 ### Case 2: Single or No Match
 
@@ -163,9 +163,6 @@ Given that highway exit coordinates are available, we impose a spatial constrain
 #### Address Lookup Validation
 
 For entries with valid street addresses, we utilize the Google Geocoding API to obtain authoritative coordinates. If the candidate location is more than 5 kilometers from the coordinates returned by Google, the match is flagged as potentially incorrect.
-
-
-
 
 
 # Appendix
@@ -232,7 +229,6 @@ The following table summarizes the data fields used in the truck stop dataset:
 | `Bulk Def` | Diesel exhaust fluid (DEF) availability |
 | `Propane` | Propane fuel available (Y/N) |
 | `https` | HTTPS version of site URL |
-| `http / htp` | Alternate/incomplete protocols |
 
 ## Yelp Data Dictionary
 
