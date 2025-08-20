@@ -1,0 +1,57 @@
+---
+title: "Geocoding Truck Stops Documentation"
+author: "William Co"
+date: today
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    geometry: margin=1in
+    fig-pos: "H"
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+abstract: |
+
+keywords: [sample, academic, report, quarto]
+---
+
+
+# Google Geocoding API Verification
+
+This document outlines the process of geocoding API verification using the Google API. While there do not appear to be any major errors in the data based on this verification, it is important to note that the sample size is extremely small (limited to places with available "proper" standard address format) and the Google API itself is known to be somewhat unreliable. 
+
+## Analysis Results
+
+The images associated with this analysis are shown below:
+
+### Analysis with No Restriction on Outliers
+
+This is the analysis when there is no restriction on outliers:
+
+![Analysis with no outlier restrictions](Images/Screenshot 2025-08-20 040613.png)
+
+### Analysis with Outliers Removed
+
+This is the analysis if outliers are removed (the top quartile, 75th percentile, is removed):
+
+![Analysis with outliers removed](Images/Screenshot 2025-08-20 040632.png)
+
+### Analysis Restricted to 1 Mile Distances
+
+This is what it looks like if I restrict to 1 mile distances:
+
+![Analysis restricted to 1 mile distances](Images/Screenshot 2025-08-20 040654.png)
+
+## Findings and Conclusions
+
+Overall, there does not seem to be any glaring error in the data. Though there are significant outliers we can investigate, I would not put too much weight on it as geocoding API from addresses is unreliable. 
+
+### Hard Restrictions on States and Zip Codes
+
+If I start hard restricting the states and zip codes, we are left with this kind of image:
+
+![Analysis with hard restrictions on states and zip codes](Images/Screenshot 2025-08-20 041419.png)
+
+As can be seen, it is sparsely populated. The geocoding API only covers 79 out of 2,100 entries, which is roughly around 12 places only. 
